@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './style.css';
+import TableComponent from './components/Table';
 
 // Customer 360 Insights Portal
 
@@ -124,6 +125,7 @@ export default function Customer360Portal() {
   const [sortBy, setSortBy] = useState('name_asc');
 
   const [addOpen, setAddOpen] = useState(false);
+    const [isTableView, setIsTableView] = useState(false)
 
   useEffect(() => {
     let mounted = true;
@@ -211,6 +213,10 @@ export default function Customer360Portal() {
           View and manage customer data — search, filter, inline edit and add
           new customers.
         </p>
+        <label class="switch">
+          <input type="checkbox" value={isTableView} onChange={() => setIsTableView(prev => !prev)} />
+          <span class="slider round"></span>
+        </label>
       </header>
 
 
@@ -221,7 +227,11 @@ export default function Customer360Portal() {
           <div className="error-box">Error: {error}</div>
         ) : filtered.length === 0 ? (
           <div className="status-box">No customers found.</div>
-        ) : (
+        ) : (isTableView ? 
+          <div>
+            <TableComponent />
+          </div>
+          :
           <div className="customer-grid">
             {filtered.map((c) => (
               <CustomerCard
