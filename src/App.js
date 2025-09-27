@@ -5,6 +5,66 @@ import TableComponent from './components/Table';
 // Customer 360 Insights Portal
 
 
+function Icon({ name, className = 'icon' }) {
+  const icons = {
+    search: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        className={className}
+      >
+        <path
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M21 21l-4.35-4.35"
+        />
+        <circle
+          cx="11"
+          cy="11"
+          r="6"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+    plus: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        className={className}
+      >
+        <path
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 5v14M5 12h14"
+        />
+      </svg>
+    ),
+    sort: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        className={className}
+      >
+        <path
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M3 6h18M6 12h12M10 18h4"
+        />
+      </svg>
+    ),
+  };
+  return icons[name] || null;
+}
+
+
 function useDebounced(value, delay = 300) {
   const [v, setV] = useState(value);
   useEffect(() => {
@@ -14,6 +74,53 @@ function useDebounced(value, delay = 300) {
   return v;
 }
 
+function Toolbar({
+  search,
+  setSearch,
+  companyOptions,
+  companyFilter,
+  setCompanyFilter,
+  sortBy,
+  setSortBy,
+  onAdd,
+}) {
+  return (
+    <div className="toolbar">
+      <div className="toolbar-controls">
+        <label className="search-box">
+          <input
+            placeholder="Search by name, email, phone or city..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <span className="search-icon">
+            <Icon name="search" />
+          </span>
+        </label>
+
+        <select
+          value={companyFilter}
+          onChange={(e) => setCompanyFilter(e.target.value)}
+        >
+          <option value="">All Companies</option>
+          {companyOptions.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="name_asc">Name ↑</option>
+          <option value="name_desc">Name ↓</option>
+          <option value="email_asc">Email ↑</option>
+          <option value="email_desc">Email ↓</option>
+        </select>
+      </div>
+
+    </div>
+  );
+}
 
 
 function CustomerCard({ customer, onInlineSave }) {
@@ -218,6 +325,17 @@ export default function Customer360Portal() {
           <span class="slider round"></span>
         </label>
       </header>
+
+      <Toolbar
+        search={search}
+        setSearch={setSearch}
+        companyOptions={companyOptions}
+        companyFilter={companyFilter}
+        setCompanyFilter={setCompanyFilter}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        onAdd={() => setAddOpen(true)}
+      />
 
 
       <main>
